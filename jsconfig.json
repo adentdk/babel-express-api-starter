@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@utils/*": ["./src/utils/*"],
     },
     "esModuleInterop": true
   },

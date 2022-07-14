@@ -13,7 +13,7 @@
       "module-resolver", {
         "root": ["."],
         "alias": {
-          // "@utils": "./src/utils"
+          "@utils": "./src/utils"
         }
       }
     ]
