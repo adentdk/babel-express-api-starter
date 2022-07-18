@@ -1,9 +1,5 @@
 import { Counter } from 'prom-client';
-import os from 'os';
-
-const hostname = os.hostname();
-const version = process.env.npm_package_version;
-const env = process.env.NODE_ENV;
+import config from '@config/config';
 
 const serviceHeartbeatCounter = new Counter({
   name: 'service_is_alive',
@@ -12,7 +8,7 @@ const serviceHeartbeatCounter = new Counter({
 });
 
 const updateServiceStatus = () => {
-  serviceHeartbeatCounter.inc({ alive: hostname });
+  serviceHeartbeatCounter.inc({ alive: config.metrics.dockerHost });
 };
 
 const serviceEnv = new Counter({
@@ -28,8 +24,8 @@ const serviceVersion = new Counter({
 });
 
 const init = () => {
-  serviceVersion.inc({ version });
-  serviceEnv.inc({ environment: env });
+  serviceVersion.inc({ version: config.metrics.version });
+  serviceEnv.inc({ environment: config.node_env });
 };
 
 export {

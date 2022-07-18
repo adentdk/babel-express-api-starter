@@ -22,7 +22,7 @@ const requestParser = (keys = []) => (req, res, next) => {
 
   if (errorParse.length) {
     const error = {
-      statusCode: StatusCodes.UNPROCESSABLE_ENTITY,
+      status: StatusCodes.UNPROCESSABLE_ENTITY,
       fields: errorParse.map((key) => ({
         name: key,
         message: 'Invalid value',

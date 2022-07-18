@@ -1,16 +1,18 @@
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { inspect as utilInspect } from 'util';
 import { logger } from '@utils/logger';
+import sendJsonResponse from '@utils/sendResponse';
+import config from '@config/config';
 
-export const methodNotAllowed = (req, res, next) => {
-  next({
-    statusCode: StatusCodes.METHOD_NOT_ALLOWED,
+export const methodNotAllowed = (req, res) => {
+  sendJsonResponse(res, {
+    status: StatusCodes.METHOD_NOT_ALLOWED,
   });
 };
 
-export const notFound = (req, res, next) => {
-  next({
-    statusCode: StatusCodes.NOT_FOUND,
+export const notFound = (req, res) => {
+  sendJsonResponse(res, {
+    status: StatusCodes.NOT_FOUND,
   });
 };
 
@@ -32,14 +34,19 @@ const errorHandler = async (error, req, res) => {
     `);
 
   const payload = {
-    fields: errorObj.fields,
+    name: errorObj.name,
     message: errorObj.message,
-    name: errorObj.name || getReasonPhrase(status),
     status,
     stack: null,
   };
 
-  if (process.env.NODE_ENV === 'development') {
+  if (errorObj.fields) {
+    payload.data = {
+      fields: errorObj.fields,
+    };
+  }
+
+  if (config.node_env === 'development') {
     payload.stack = errorObj.stack;
   }
 
@@ -51,7 +58,7 @@ const errorHandler = async (error, req, res) => {
     }
   }
 
-  return res.status(status).json(payload).end();
+  return sendJsonResponse(res, payload);
 };
 
 export default errorHandler;

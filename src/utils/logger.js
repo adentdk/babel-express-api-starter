@@ -1,3 +1,4 @@
+import config from '@config/config';
 import winston from 'winston';
 
 const { format } = winston;
@@ -19,7 +20,6 @@ const custom = {
     http: 'pink',
   },
 };
-const { NODE_ENV } = process.env;
 
 winston.addColors(custom.colors);
 export const myFormat = format.printf(
@@ -28,7 +28,7 @@ export const myFormat = format.printf(
 
 export const logger = winston.createLogger({
   levels: custom.levels,
-  level: NODE_ENV === 'production' ? 'error' : 'debug',
+  level: config.node_env === 'production' ? 'error' : 'debug',
   format: format.combine(
     format.timestamp(),
     format.json(),
@@ -39,14 +39,7 @@ export const logger = winston.createLogger({
     new winston.transports.File({ filename: 'info.log', level: 'debug' }),
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.Console({
-      level: NODE_ENV === 'production' ? 'error' : 'debug',
+      level: config.node_env === 'production' ? 'error' : 'debug',
     }),
   ],
 });
-
-logger.morgan = {
-  write(message) {
-    // eslint-disable-next-line no-console
-    console.log(message);
-  },
-};
