@@ -1,5 +1,6 @@
 import sendJsonResponse from '@utils/sendResponse';
 import { Router } from 'express';
+import { methodNotAllowed } from 'src/middlewares/errorHandler';
 
 const authRouter = () => {
   const router = Router();
@@ -8,7 +9,7 @@ const authRouter = () => {
     sendJsonResponse(res, {
       message: 'Login',
     });
-  });
+  }).all(methodNotAllowed);
 
   return router;
 };
