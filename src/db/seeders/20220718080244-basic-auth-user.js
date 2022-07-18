@@ -1,4 +1,4 @@
-require('../../config/sequelize');
+require('../config');
 const bcrypt = require('bcrypt');
 
 module.exports = {

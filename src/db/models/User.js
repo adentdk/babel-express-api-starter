@@ -5,12 +5,13 @@ import config from '@config/config';
 
 export default (sequelize) => {
   class User extends Model {
+    // eslint-disable-next-line no-unused-vars
     static associate(models) {
-      this.belongsToMany(models.ChatRoom, {
-        foreignKey: 'userId',
-        as: 'chatRooms',
-        through: models.ChatParticipant,
-      });
+      // this.belongsToMany(models.ChatRoom, {
+      //   foreignKey: 'userId',
+      //   as: 'chatRooms',
+      //   through: models.ChatParticipant,
+      // });
     }
 
     static findByUsername(username, { where, ...options } = {}) {
