@@ -18,7 +18,6 @@
     "seed:generate": "sequelize seed:generate --name",
     "clean": "rimraf ./dist-babel",
     "dev": "nodemon — exec babel-node ./src/index.dev.js",
-    "dev:local": "APP_ENV=local nodemon — exec babel-node ./src/index.dev.js", 
     "build": "npm run clean && run-p -l build:*",
     "build:babel": "NODE_ENV=production babel ./src --extensions .js --out-dir ./dist-babel",
     "preprod:babel": "yarn build:babel",

@@ -22,7 +22,7 @@ const sendJsonResponse = (res, {
 
   res
     .status(status)
-    .send(payloadResponse);
+    .json(payloadResponse).end();
 };
 
 export default sendJsonResponse;
