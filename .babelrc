@@ -14,7 +14,10 @@
         "root": ["."],
         "alias": {
           "@config": "./src/config",
-          "@utils": "./src/utils"
+          "@controller-v1": "./src/http/v1/controllers",
+          "@middlewares": "./src/middlewares",
+          "@utils": "./src/utils",
+          "@models": "./src/db/models"
         }
       }
     ]

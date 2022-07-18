@@ -3,7 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "@config/*": ["./src/config/*"],
+      "@controller-v1/*": ["./src/http/v1/controllers/*"],
       "@utils/*": ["./src/utils/*"],
+      "@middlewares/*": ["./src/middlewares/*"],
+      "@models/*": ["./src/db/models/*"]
     },
     "esModuleInterop": true
   },
