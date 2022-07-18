@@ -1,3 +1,4 @@
+// MIGRATION PURPOSE ONLY
 module.exports = {
   username: 'postgres',
   password: 'paketchat',
