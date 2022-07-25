@@ -19,6 +19,8 @@ export function initSocket(httpServer) {
   const ioServer = io.of(config.websocket.path);
 
   onConnection(ioServer);
+
+  return io;
 }
 
 export default initSocket;

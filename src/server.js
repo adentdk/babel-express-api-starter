@@ -1,14 +1,25 @@
 import http from 'http';
 import { logger } from '@utils/logger';
 import * as healthcheck from '@utils/healthcheck';
+import express from 'express';
+
 import { start } from './expressFile';
+
 import config from './config/config';
 import { initSocket } from './socket';
 
-const app = start(config.node_env);
+const app = express();
 const server = http.createServer(app);
 
-initSocket(server);
+const io = initSocket(server);
+
+app.use((req, res, next) => {
+  res.io = io;
+
+  next();
+});
+
+start(app, config.node_env);
 
 healthcheck.init();
 

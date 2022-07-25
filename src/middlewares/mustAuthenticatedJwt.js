@@ -7,7 +7,6 @@ const mustAuthenticatedHeaderJwt = (req, res, next) => {
 
   try {
     token = req.headers.authorization.replace('Bearer ', '');
-
     if (!token) {
       throw new Error();
     }
@@ -22,6 +21,7 @@ const mustAuthenticatedHeaderJwt = (req, res, next) => {
     const decodedToken = verify(token, config.jwt.secretKey);
 
     req.auth = decodedToken;
+    next();
   } catch (error) {
     next({
       status: StatusCodes.UNAUTHORIZED,
