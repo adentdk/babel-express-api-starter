@@ -8,6 +8,7 @@ import errorHandler, { notFound } from './middlewares/errorHandler';
 // import swaggerUi from 'swagger-ui-express';
 
 export function start(app, env) {
+  logger.debug(`App running as ${env}`);
   app.use(cors());
 
   // morgan logger request response
