@@ -8,8 +8,9 @@ export default (sequelize) => {
         as: 'messages',
       });
       this.belongsToMany(models.User, {
-        foreignKey: 'userId',
-        as: 'users',
+        foreignKey: 'chatRoomId',
+        otherKey: 'userId',
+        as: 'participants',
         through: models.ChatParticipant,
       });
     }

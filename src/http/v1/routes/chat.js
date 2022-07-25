@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { methodNotAllowed } from '@middlewares/errorHandler';
 import * as chatControllers from '@controller-v1/chat';
 import mustAuthenticatedHeaderJwt from '@middlewares/mustAuthenticatedJwt';
+import yupvalidate from '@middlewares/yupvalidate';
 
 const chatRouter = () => {
   const router = Router();
@@ -11,6 +12,11 @@ const chatRouter = () => {
     .get(
       mustAuthenticatedHeaderJwt,
       chatControllers.getRoomList,
+    )
+    .post(
+      mustAuthenticatedHeaderJwt,
+      yupvalidate(chatControllers.createRoomSchema),
+      chatControllers.createRoom,
     )
     .all(methodNotAllowed);
 
