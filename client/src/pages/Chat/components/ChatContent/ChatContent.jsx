@@ -1,9 +1,11 @@
 import classNames from "classnames";
+import { useLocation } from "react-router-dom";
 
 export default function ChatContent() {
+  const {hash} = useLocation();
   return (
     <main
-      id="chatid"
+      id={hash.replace('#', '') || 'chatId'}
       className={classNames(
         "transition-[width]",
         "peer",

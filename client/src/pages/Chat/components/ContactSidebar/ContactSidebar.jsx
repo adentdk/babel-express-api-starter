@@ -1,9 +1,31 @@
 import classNames from "classnames"
+import api from "../../../../services/api"
+import { useCallback, useEffect, useState } from "react"
 import FormInput from "../../../../design-systems/molecules/FormInput"
 import ChatListItem from "./ChatListItem"
 import MainMenu from "./MainMenu"
 
 export default function ContactSidebar() {
+
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState([]);
+
+  const getRooms = useCallback(() => {
+    setLoading(true);
+
+    api.get('/v1/chat/rooms').then(({ data: responseData }) => (
+      setRooms(responseData.data.rooms)
+    )).finally(() => {
+      setLoading(false)
+    })
+
+  }, []);
+
+  useEffect(() => {
+    getRooms();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <aside
       className={classNames(
@@ -30,13 +52,14 @@ export default function ContactSidebar() {
       </header>
 
       <div className="px-1 pt-16 h-full overflow-y-auto border-r-2 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-50">
-        {CONTACT.map((contact, index) => {
+        {loading && <div>loading</div>}
+        {rooms.map((room, index) => {
           const active = index === 1
           return (
             <ChatListItem
-              key={contact.id + index}
+              key={room.id + index}
               active={active}
-              contact={contact}
+              room={room}
               className={classNames({ 'mt-4': index === 0 })}
             />
           )
@@ -45,83 +68,3 @@ export default function ContactSidebar() {
     </aside>
   )
 }
-
-const CONTACT = [
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 1,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 12,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-  {
-    id: 'chatid',
-    name: 'Aden trisna',
-    lastMessage: 'halo ini adalah data yang palsu',
-    lastMessageAt: '2022-08-01',
-    unread: 0,
-  },
-]
