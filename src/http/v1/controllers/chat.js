@@ -3,14 +3,26 @@ import { StatusCodes } from 'http-status-codes';
 import db from '@models';
 
 export const getRoomList = async (req, res, next) => {
-  const { id } = req.auth;
+  const { username } = req.auth;
 
   try {
-    const user = await db.User.findByPk(id);
+    const user = await db.User.findByUsername(username);
+
+    if (!user) {
+      next({
+        status: StatusCodes.BAD_REQUEST,
+        message: 'user not found',
+      });
+    }
+
+    const rooms = await user.getChatRooms();
 
     sendJsonResponse(res, {
       status: StatusCodes.OK,
-      user: user.toJSON(),
+      data: {
+        user: user.toJSON(),
+        rooms: rooms.map((room) => room.toJSON()),
+      },
     });
   } catch (error) {
     next(error);

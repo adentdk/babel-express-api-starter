@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model } from 'sequelize';
 
 export default (sequelize) => {
   class ChatParticipant extends Model {
@@ -14,28 +14,11 @@ export default (sequelize) => {
     }
   }
 
-  ChatParticipant.init({
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-  }, {
+  ChatParticipant.init({}, {
     sequelize,
     modelName: 'ChatParticipant',
     freezeTableName: true,
-    timestamps: true,
-    paranoid: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt',
+    timestamps: false,
   });
 
   return ChatParticipant;
