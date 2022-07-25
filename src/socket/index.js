@@ -2,12 +2,7 @@
 import { logger } from '@utils/logger';
 import config from '@config/config';
 import { Server } from 'socket.io';
-
-const onConnection = (io) => {
-  io.on('connection', (socket) => {
-    socket.emit('connected', true);
-  });
-};
+import chatSocket from './functions/chat';
 
 export function initSocket(httpServer) {
   logger.info('Socket initiated');
@@ -16,9 +11,9 @@ export function initSocket(httpServer) {
     cors: '*',
   });
 
-  const ioServer = io.of(config.websocket.path);
+  const ioChat = io.of(`${config.websocket.path}/chat`);
 
-  onConnection(ioServer);
+  chatSocket(ioChat);
 
   return io;
 }

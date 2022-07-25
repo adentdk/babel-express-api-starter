@@ -6,8 +6,23 @@ import { Op } from 'sequelize';
 
 export const createRoomSchema = yup.object().shape({
   body: yup.object().shape({
+    name: yup.string().max(255).trim().when('type', {
+      is: (value) => value === 'group',
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.optional(),
+    }),
     description: yup.string().max(255).trim().optional(),
-    participantUsername: yup.string().max(32).required(),
+    type: yup.string().oneOf(['personal', 'group']).default('personal').optional(),
+    participantUsername: yup.string().max(32).when('type', {
+      is: (value) => value === 'personal',
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    participantUsernames: yup.string().max(32).when('type', {
+      is: (value) => value === 'group',
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   }).noUnknown(),
 });
 
@@ -24,13 +39,41 @@ export const getRoomList = async (req, res, next) => {
       });
     }
 
-    const rooms = await user.getChatRooms();
+    const rooms = await user.getChatRooms({
+      include: [
+        {
+          model: db.ChatMessage,
+          as: 'messages',
+          limit: 1,
+          order: [
+            ['createdAt', 'desc'],
+          ],
+        },
+        {
+          model: db.User,
+          as: 'participants',
+          through: {
+            attributes: [],
+            limit: 1,
+            where: {
+              userId: {
+                [Op.ne]: user.id,
+              },
+            },
+          },
+        },
+      ],
+    });
 
     sendJsonResponse(res, {
       status: StatusCodes.OK,
       data: {
-        user: user.toJSON(),
-        rooms: rooms.map((room) => room.toJSON()),
+        rooms: rooms.map((room) => ({
+          id: room.id,
+          name: room.name || room.participants[0]?.fullName,
+          lastMessage: room.messages[0]?.content,
+          lastMessageAt: room.messages[0]?.createdAt,
+        })),
       },
     });
   } catch (error) {
@@ -44,8 +87,11 @@ export const createRoom = async (req, res, next) => {
       username,
     },
     body: {
+      name,
       description,
+      type,
       participantUsername,
+      participantUsernames,
     },
   } = req;
 
@@ -54,22 +100,34 @@ export const createRoom = async (req, res, next) => {
   try {
     t = await db.sequelize.transaction();
 
+    const participants = [username];
+
+    if (type === 'personal') {
+      participants.push(participantUsername);
+    } else {
+      participants.concat(participantUsernames);
+    }
+
     const users = await db.User.findAll({
       where: {
         username: {
-          [Op.in]: [username, participantUsername],
+          [Op.in]: participants,
         },
       },
     });
 
-    if (users.length !== 2) {
+    if (users.length !== participants.length) {
       throw {
         status: StatusCodes.BAD_REQUEST,
         message: 'participant not found',
       };
     }
 
-    const room = await db.ChatRoom.create({ description }, { transaction: t });
+    const room = await db.ChatRoom.create({
+      name,
+      description,
+      type,
+    }, { transaction: t });
 
     await room.addParticipants(users, { transaction: t });
 
@@ -86,9 +144,30 @@ export const createRoom = async (req, res, next) => {
   }
 };
 
-export const getRoomMessages = (req, res, next) => {
+export const getRoomMessages = async (req, res, next) => {
   // eslint-disable-next-line no-empty
-  try { } catch (error) {
+  const { roomId } = req.params;
+  try {
+    const room = await db.ChatRoom.findByPk(roomId);
+    if (!room) {
+      throw {
+        status: StatusCodes.BAD_REQUEST,
+        message: 'room not found',
+      };
+    }
+
+    const messages = await room.getMessages({
+      order: [
+        ['createdAt', 'ASC'],
+      ],
+      limit: 50,
+    });
+
+    sendJsonResponse(res, {
+      status: StatusCodes.OK,
+      data: { messages },
+    });
+  } catch (error) {
     next(error);
   }
 };

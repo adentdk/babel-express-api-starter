@@ -42,6 +42,7 @@ export default (sequelize) => {
   User.init({
     fullName: DataTypes.STRING(64),
     username: DataTypes.STRING(32),
+    isActive: DataTypes.BOOLEAN,
     password: {
       type: DataTypes.STRING(64),
       set(value) {

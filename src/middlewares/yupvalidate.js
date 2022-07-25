@@ -8,7 +8,6 @@ const yupvalidate = (schema) => async (req, res, next) => {
       params: req.params,
     }, {
       abortEarly: false,
-      strict: true,
     });
     next();
   } catch (error) {

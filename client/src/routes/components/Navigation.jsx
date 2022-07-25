@@ -8,7 +8,7 @@ function Navigation({ routes }) {
   const renderMustAuthenticated = useCallback((route) => {
     if (isLogin) {
       return (
-        <route.component></route.component>
+        <route.component routes={route.routes}></route.component>
       )
     }
 
@@ -18,7 +18,7 @@ function Navigation({ routes }) {
   const renderMustUnAuthenticated = useCallback((route) => {
     if (!isLogin) {
       return (
-        <route.component></route.component>
+        <route.component routes={route.routes}></route.component>
       )
     }
 
@@ -63,7 +63,7 @@ function Navigation({ routes }) {
           <Route
             key={index}
             path={route.path}
-            element={<route.component></route.component>}
+            element={<route.component routes={route.routes}></route.component>}
           />
         )
       })}

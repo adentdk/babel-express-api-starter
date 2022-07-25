@@ -17,6 +17,8 @@ export default (sequelize) => {
   }
 
   ChatRoom.init({
+    name: DataTypes.STRING,
+    type: DataTypes.ENUM('personal', 'group'),
     description: DataTypes.STRING,
     createdAt: {
       type: DataTypes.DATE,

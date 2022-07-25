@@ -20,6 +20,14 @@ const chatRouter = () => {
     )
     .all(methodNotAllowed);
 
+  router
+    .route('/rooms/:roomId/messages')
+    .get(
+      mustAuthenticatedHeaderJwt,
+      chatControllers.getRoomMessages,
+    )
+    .all(methodNotAllowed);
+
   return router;
 };
 
