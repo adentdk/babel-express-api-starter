@@ -17,7 +17,11 @@
     "swagger:convert:v1": "swagger-cli bundle -o ./docs/v1.json ./docs/v1.yml",
     "lint": "eslint ./src --fix"
   },
+  "prisma": {
+    "schema": "src/db/schema.prisma"
+  },
   "dependencies": {
+    "@prisma/client": "4.1.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -53,6 +57,7 @@
     "eslint-plugin-module-resolver": "^1.4.0",
     "nodemon": "^2.0.19",
     "npm-run-all": "^4.1.5",
+    "prisma": "^4.1.0",
     "rimraf": "^3.0.2",
     "swagger-cli": "^4.0.4"
   }
