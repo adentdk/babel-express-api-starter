@@ -16,8 +16,7 @@
           "@config": "./src/config",
           "@controller-v1": "./src/http/v1/controllers",
           "@middlewares": "./src/middlewares",
-          "@utils": "./src/utils",
-          "@models": "./src/db/models"
+          "@utils": "./src/utils"
         }
       }
     ]
