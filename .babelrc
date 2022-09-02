@@ -1,4 +1,7 @@
 {
+  "ignore": [
+    "*.dev.js"
+  ],
   "presets": [
     [
       "@babel/preset-env", {
