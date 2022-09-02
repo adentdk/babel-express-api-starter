@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  database:
+    container_name: ${PROJECT}.database
+    image: postgres:13-alpine
+    env_file: 
+      - .env
+    environment: 
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+
+  api-express:
+    container_name: ${PROJECT}.api-express
+    image: ${PROJECT}.api-express:prod-${TAG}
+    depends_on:
+      - database
+    env_file: 
+      - .env
+    environment: 
+      - DB_HOST=database
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@database:${DB_PORT}/${DB_NAME}
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8083:3000
+    volumes:
+      - ./public:/usr/src/app/public
+
+    
